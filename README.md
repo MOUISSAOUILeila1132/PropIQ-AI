@@ -8,7 +8,6 @@
 ## 🚀 Key Features
 
 - **💬 Smart Legal Assistant (Free Chat)**: A chatbot powered by RAG that answers complex legal and compliance questions using a dedicated legal corpus for Portugal.
-- **⚖️ Guided Compliance Assistant**: A step-by-step interactive questionnaire that analyzes property data and generates a structured compliance report.
 - **🏙️ Quality of Life Analysis**: Real-time evaluation of any address in Setúbal, calculating scores for accessibility, services (POIs), and environment (air quality).
 - **📊 MLflow Performance Tracking**: Real-time monitoring of AI metrics (ROUGE, BLEU, execution time) to ensure the highest accuracy of legal advice.
 - **🔐 User Authentication**: Complete Sign-In and Sign-Up flow to manage property analyses and user history.
