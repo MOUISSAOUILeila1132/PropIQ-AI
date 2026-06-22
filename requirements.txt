@@ -1,0 +1,78 @@
+# ============================================================
+# PropTech AI — Requirements complets
+# ============================================================
+
+# --- Cœur du projet ---
+langchain
+langchain-community
+langchain-huggingface
+langchain-openai
+
+# --- Support GPU et Embeddings ---
+torch
+torchvision
+torchaudio
+sentence-transformers
+faiss-cpu
+
+# --- Manipulation de données et PDF ---
+pypdf
+pdfminer.six
+tiktoken
+python-dotenv
+
+# --- Serveur API ---
+fastapi
+uvicorn
+python-multipart
+
+# --- Ajouts requis par app.py ---
+openai
+pydantic
+
+# --- Ajouts requis par StreamlitApp.py ---
+streamlit
+# uuid → intégré Python (pas besoin d'installer)
+
+# ============================================================
+# --- MLflow — Tracking, évaluation & Model Registry ---
+# ============================================================
+
+# Serveur de tracking + Model Registry (SQLite inclus par défaut)
+mlflow>=2.13.0
+
+# Métriques d'évaluation NLP
+nltk>=3.8.1           # BLEU score  → sentence_bleu
+rouge-score>=0.1.2    # ROUGE-1 / ROUGE-2 / ROUGE-L
+
+# Manipulation des résultats (dashboard Streamlit)
+pandas>=2.0.0
+
+# Lancement du serveur MLflow en subprocess depuis Streamlit
+# (subprocess, socket, atexit → modules stdlib, rien à installer)
+
+# ============================================================
+# --- Notes d'installation ---
+# ============================================================
+# 1. Installation standard :
+#       pip install -r requirements.txt
+#
+# 2. GPU (CUDA 12.1) — remplacer torch/torchvision/torchaudio par :
+#       pip install torch torchvision torchaudio \
+#           --index-url https://download.pytorch.org/whl/cu121
+#
+# 3. Télécharger les données NLTK nécessaires au BLEU score
+#    (à exécuter une seule fois après installation) :
+#       python -c "import nltk; nltk.download('punkt')"
+#
+# 4. Le serveur MLflow UI démarre automatiquement sur :
+#       http://localhost:5000
+#    Variables d'environnement configurables dans .env :
+#       MLFLOW_TRACKING_URI=sqlite:///mlflow.db
+#       MLFLOW_EXPERIMENT_NAME=PropTech_AI_LLM
+#       MLFLOW_MODEL_NAME=PropTechLLM
+#       MLFLOW_UI_PORT=5000
+
+
+# --- Firebase Authentication ---
+firebase-admin       

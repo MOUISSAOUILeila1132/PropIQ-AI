@@ -1,0 +1,59 @@
+# ============================================================
+# PropIQ — .dockerignore
+# ============================================================
+# Exclut les fichiers inutiles de l'image Docker
+# pour réduire la taille et protéger les secrets
+# ============================================================
+
+# ── Secrets — NE JAMAIS inclure dans l'image ─────────────────
+.env
+*.env
+.env.*
+!.env.example
+
+# ── Cache Python ─────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# ── Environnement virtuel ────────────────────────────────────
+venv/
+env/
+.venv/
+
+# ── Cache HuggingFace (trop lourd — monter via volume) ───────
+.cache/
+*.cache
+
+# ── MLflow runs (données locales) ────────────────────────────
+mlruns/
+mlflow.db
+
+# ── Base de données locale ───────────────────────────────────
+*.db
+*.sqlite
+
+# ── Git ──────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── IDE ──────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+
+# ── Tests et docs ────────────────────────────────────────────
+tests/
+*.md
+*.txt
+!requirements.txt
+
+# ── Notebooks ────────────────────────────────────────────────
+*.ipynb
+.ipynb_checkpoints/
+
+# ── OS ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

@@ -1,0 +1,90 @@
+# ============================================================
+# PropIQ — Docker Compose (Atelier 7)
+# Elasticsearch + Kibana + PropIQ App
+# ============================================================
+# Usage :
+#   docker-compose up -d              → Démarrer tout
+#   docker-compose up -d elasticsearch kibana  → Monitoring seul
+#   docker-compose down               → Arrêter tout
+#   docker-compose logs -f propiq     → Logs de l'app
+# ============================================================
+
+version: '3.8'
+
+services:
+
+  # ── Elasticsearch ─────────────────────────────────────────
+  elasticsearch:
+    image: elasticsearch:8.12.0
+    container_name: propiq-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - propiq-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # ── Kibana ────────────────────────────────────────────────
+  kibana:
+    image: kibana:8.12.0
+    container_name: propiq-kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - xpack.security.enabled=false
+    ports:
+      - "5601:5601"
+    networks:
+      - propiq-network
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5601/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  # ── PropIQ App ────────────────────────────────────────────
+  propiq:
+    image: propiq-app:latest
+    container_name: propiq-app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    volumes:
+      - ${HOME}/.cache/huggingface:/root/.cache/huggingface
+      - ./mlruns:/app/mlruns
+      - ./propiq_v2.db:/app/propiq_v2.db
+      - ./evaluations:/app/evaluations
+    networks:
+      - propiq-network
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    restart: unless-stopped
+
+# ── Volumes persistants ───────────────────────────────────
+volumes:
+  esdata:
+    driver: local
+
+# ── Réseau partagé ────────────────────────────────────────
+networks:
+  propiq-network:
+    driver: bridge
