@@ -1,5 +1,5 @@
 
-# 🏠 Proptech-AI AI-Powered Real Estate Intelligence for Setúbal
+# 🏠 PropIQ-AI AI-Powered Real Estate Intelligence for Setúbal
 
 **Proptech-AI** is a professional real estate companion platform focused on the **Setúbal market in Portugal**. It combines Generative AI (LLM), Retrieval-Augmented Generation (RAG), and geospatial data to help users evaluate property compliance and neighborhood quality of life.
 
