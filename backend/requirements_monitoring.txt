@@ -1,0 +1,11 @@
+# ============================================================
+# PropIQ — Dépendances Monitoring (Atelier 7)
+# À ajouter à requirements.txt ou installer séparément :
+#   pip install -r requirements_monitoring.txt
+# ============================================================
+
+# --- Elasticsearch client ---
+elasticsearch>=8.12.0
+
+# --- Monitoring système (CPU, RAM, Disk) ---
+psutil>=5.9.0

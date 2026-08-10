@@ -1,0 +1,84 @@
+name: PropIQ CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+env:
+  DOCKER_IMAGE: propiq-app
+  DOCKER_TAG: latest
+  PYTHON_VERSION: "3.11"
+
+jobs:
+
+# ============================================================
+# 🔍 LINT + SECURITY
+# ============================================================
+  lint:
+    name: "🔍 Lint & Security"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: "📦 Install tools"
+        run: |
+          pip install --upgrade pip
+          pip install black flake8 bandit
+
+      - name: "🎨 Black check"
+        working-directory: backend
+        run: black --check --diff .
+
+      - name: "🔍 Flake8 lint"
+        working-directory: backend
+        run: |
+          flake8 . \
+            --max-line-length=100 \
+            --extend-ignore=E501,W503 \
+            --exclude=venv,__pycache__
+
+      - name: "🛡️ Bandit security"
+        working-directory: backend
+        run: bandit -r .
+
+# ============================================================
+# 🐳 BUILD & PUSH DOCKER
+# ============================================================
+  build:
+    name: "🐳 Build & Push Docker"
+    runs-on: ubuntu-latest
+    needs: lint
+    if: github.event_name == 'push'
+
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+
+      - name: "🔐 Docker login"
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: "🏷️ Docker metadata"
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE }}
+
+      - name: "⚡ Build & Push"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
